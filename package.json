@@ -1,0 +1,13 @@
+{
+  "name": "root",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "react-three-globe",
+    "example"
+  ],
+  "packageManager": "bun@1.0.20",
+  "dependencies": {
+    "@biomejs/biome": "1.4.1"
+  }
+}

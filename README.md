@@ -1,1 +1,1 @@
-# react-three-globe
+react-three-globe/README.md

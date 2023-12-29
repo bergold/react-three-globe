@@ -1,0 +1,9 @@
+{
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"types": ["@react-three/fiber"],
+		"jsx": "preserve",
+		"lib": ["dom", "dom.iterable", "esnext"]
+	},
+	"include": ["**/src"]
+}

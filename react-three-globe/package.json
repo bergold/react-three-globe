@@ -1,0 +1,30 @@
+{
+  "name": "react-three-globe",
+  "description": "A React component to create beautiful 3D globes and data visualizations in React using Three.js",
+  "version": "0.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./src/react-three-globe.ts"
+  },
+  "peerDependencies": {
+    "@react-three/drei": "*",
+    "@react-three/fiber": "*",
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "@react-three/drei": "^9.92.7",
+    "@react-three/fiber": "^8.15.12",
+    "@types/react": "^18.2.45",
+    "@types/three": "^0.160.0",
+    "react": "^18.2.0",
+    "three": "^0.160.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "three-stdlib": "^2.28.9"
+  }
+}
