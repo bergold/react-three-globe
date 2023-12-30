@@ -9,11 +9,11 @@ export function polar2Cartesian(
 	const phi = ((90 - lat) * Math.PI) / 180;
 	const theta = ((90 - lng) * Math.PI) / 180;
 	const r = GLOBE_RADIUS * (1 + (relAltitude ?? 0));
-	return {
-		x: r * Math.sin(phi) * Math.cos(theta),
-		y: r * Math.cos(phi),
-		z: r * Math.sin(phi) * Math.sin(theta),
-	};
+	return [
+		r * Math.sin(phi) * Math.cos(theta),
+		r * Math.cos(phi),
+		r * Math.sin(phi) * Math.sin(theta),
+	] as const;
 }
 
 export function deg2Rad(deg: number) {

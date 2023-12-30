@@ -1,12 +1,18 @@
+import { Html } from "@react-three/drei";
 import { Coordinate, polar2Cartesian } from "../coord";
 
-export function Marker({ coordinate }: { coordinate: Coordinate }) {
-	const { x, y, z } = polar2Cartesian(coordinate);
+export interface MarkerProps {
+	coordinate: Coordinate;
+	children: React.ReactNode;
+	className?: string;
+	style?: React.CSSProperties;
+}
 
+export function Marker({ coordinate, children, ...div }: MarkerProps) {
+	const vec = polar2Cartesian(coordinate, 0.01);
 	return (
-		<mesh position={[x, y, z]}>
-			<sphereGeometry args={[2, 32, 32]} />
-			<meshStandardMaterial color="red" />
-		</mesh>
+		<Html {...div} position={vec} occlude>
+			{children}
+		</Html>
 	);
 }

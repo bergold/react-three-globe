@@ -4,16 +4,20 @@ import { Suspense, useImperativeHandle, useRef } from "react";
 import type { OrbitControls as OrbitControlsRef } from "three-stdlib";
 import { GLOBE_RADIUS } from "./const";
 import { Coordinate, deg2Rad } from "./coord";
-import { Globe } from "./layers/globe";
+import { Globe, GlobeProps } from "./layers/globe";
+
+type Prefix<T, P extends string> = {
+	[K in keyof T as `${P}${K extends string ? Capitalize<K> : never}`]: T[K];
+};
 
 export interface ThreeGlobeRef {
 	pointOfView: (coords: Coordinate) => void;
 }
 
-export interface ThreeGlobeProps {
+export type ThreeGlobeProps = {
 	globeRef?: React.Ref<ThreeGlobeRef>;
 	children?: React.ReactNode;
-}
+} & Prefix<GlobeProps, "globe">;
 
 export function ThreeGlobe(props: ThreeGlobeProps) {
 	return (
@@ -28,7 +32,7 @@ export function ThreeGlobe(props: ThreeGlobeProps) {
 	);
 }
 
-function _ThreeGlobe({ globeRef, children }: ThreeGlobeProps) {
+function _ThreeGlobe({ globeRef, children, ...globe }: ThreeGlobeProps) {
 	const ctrl = useRef<OrbitControlsRef>(null);
 
 	useImperativeHandle(globeRef, () => ({
@@ -55,7 +59,7 @@ function _ThreeGlobe({ globeRef, children }: ThreeGlobeProps) {
 				minDistance={110}
 				maxDistance={800}
 			/>
-			<Globe />
+			<Globe texture={globe.globeTexture} />
 			{children}
 		</>
 	);
