@@ -25,24 +25,11 @@ export type ThreeGlobeProps = {
 	children?: React.ReactNode;
 } & Prefix<GlobeProps, "globe">;
 
-export function ThreeGlobe({ children, ...props }: ThreeGlobeProps) {
-	return (
-		<Canvas frameloop="demand">
-			<Suspense fallback={null}>
-				<ambientLight color={0xcccccc} intensity={Math.PI} />
-				<directionalLight color={0xffffff} intensity={0.6 * Math.PI} />
-				<PerspectiveCamera makeDefault position={[0, 0, GLOBE_RADIUS * 2.5]} />
-				<_ThreeGlobe {...props} />
-				{children}
-			</Suspense>
-		</Canvas>
-	);
-}
-
-function _ThreeGlobe({
+export function ThreeGlobe({
 	globeRef,
 	polarOffset,
 	azimuthOffset,
+	children,
 	...globe
 }: ThreeGlobeProps) {
 	const ctrl = useRef<OrbitControlsRef>(null);
@@ -63,22 +50,31 @@ function _ThreeGlobe({
 	);
 
 	return (
-		<>
-			<OrbitControls
-				ref={ctrl}
-				makeDefault
-				onStart={() => {
-					// Note: This prevents the user from selecting text, when dragging the globe
-					document.body.style.userSelect = "none";
-				}}
-				onEnd={() => {
-					document.body.style.userSelect = "";
-				}}
-				minDistance={110}
-				maxDistance={800}
-				enablePan={false}
-			/>
-			<Globe texture={globe.globeTexture} />
-		</>
+		<Canvas frameloop="demand">
+			<Suspense fallback={null}>
+				{/* LIGHTS */}
+				<ambientLight color={0xcccccc} intensity={Math.PI} />
+				<directionalLight color={0xffffff} intensity={0.6 * Math.PI} />
+				{/* CAMERA */}
+				<PerspectiveCamera makeDefault position={[0, 0, GLOBE_RADIUS * 2.5]} />
+				{/* CONTROLS */}
+				<OrbitControls
+					ref={ctrl}
+					makeDefault
+					onStart={() => {
+						// Note: This prevents the user from selecting text, when dragging the globe
+						document.body.style.userSelect = "none";
+					}}
+					onEnd={() => {
+						document.body.style.userSelect = "";
+					}}
+					minDistance={110}
+					maxDistance={800}
+					// enablePan={false}
+				/>
+				<Globe texture={globe.globeTexture} />
+				{children}
+			</Suspense>
+		</Canvas>
 	);
 }

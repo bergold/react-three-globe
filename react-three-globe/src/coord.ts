@@ -1,6 +1,15 @@
+import { useMemo } from "react";
+import { Vector3 } from "three";
 import { GLOBE_RADIUS } from "./const";
 
 export type Coordinate = { lat: number; lng: number };
+
+export function useVec3({ lat, lng }: Coordinate, relAltitude?: number) {
+	return useMemo(
+		() => new Vector3(...polar2Cartesian({ lat, lng }, relAltitude)),
+		[lat, lng, relAltitude],
+	);
+}
 
 export function polar2Cartesian(
 	{ lat, lng }: Coordinate,
