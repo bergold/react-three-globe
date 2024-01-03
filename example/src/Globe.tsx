@@ -36,7 +36,7 @@ export default function Globe() {
 		<div style={{ width: "100vw", height: "100vh", background: "#eee" }}>
 			<ThreeGlobe
 				globeRef={globe}
-				globeTexture="https://unpkg.com/three-globe/example/img/earth-day.jpg"
+				globeTexture="/texture.png"
 				polarOffset={0.2}
 			>
 				<Perf />
