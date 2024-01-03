@@ -1,11 +1,12 @@
 import React, { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 const Globe = React.lazy(() => import("./Globe"));
 
 export default function App() {
 	return (
 		<>
-			<Suspense
+			<ErrorBoundary
 				fallback={
 					<div
 						style={{
@@ -17,12 +18,29 @@ export default function App() {
 							alignItems: "center",
 						}}
 					>
-						<div>Loading...</div>
+						<div>Error</div>
 					</div>
 				}
 			>
-				<Globe />
-			</Suspense>
+				<Suspense
+					fallback={
+						<div
+							style={{
+								width: "100vw",
+								height: "100vh",
+								background: "#eee",
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<div>Loading...</div>
+						</div>
+					}
+				>
+					<Globe />
+				</Suspense>
+			</ErrorBoundary>
 			<Options />
 		</>
 	);
