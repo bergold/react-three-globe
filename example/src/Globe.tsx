@@ -33,7 +33,17 @@ export default function Globe() {
 	}, []);
 
 	return (
-		<div style={{ width: "100vw", height: "100vh", background: "#eee" }}>
+		<div
+			style={{
+				// create a new stacking context
+				position: "relative",
+				zIndex: 0,
+
+				width: "100vw",
+				height: "100vh",
+				background: "#eee",
+			}}
+		>
 			<ThreeGlobe
 				globeRef={globe}
 				globeTexture="/texture.png"
