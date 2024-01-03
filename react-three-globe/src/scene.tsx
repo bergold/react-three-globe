@@ -47,16 +47,20 @@ function _ThreeGlobe({
 }: ThreeGlobeProps) {
 	const ctrl = useRef<OrbitControlsRef>(null);
 
-	useImperativeHandle(globeRef, () => ({
-		pointOfView: (coords) => {
-			ctrl.current?.setPolarAngle(
-				Math.PI / 2 - deg2Rad(coords.lat) + (polarOffset ?? 0),
-			);
-			ctrl.current?.setAzimuthalAngle(
-				deg2Rad(coords.lng) + (azimuthOffset ?? 0),
-			);
-		},
-	}));
+	useImperativeHandle(
+		globeRef,
+		() => ({
+			pointOfView: (coords) => {
+				ctrl.current?.setPolarAngle(
+					Math.PI / 2 - deg2Rad(coords.lat) + (polarOffset ?? 0),
+				);
+				ctrl.current?.setAzimuthalAngle(
+					deg2Rad(coords.lng) + (azimuthOffset ?? 0),
+				);
+			},
+		}),
+		[polarOffset, azimuthOffset],
+	);
 
 	return (
 		<>

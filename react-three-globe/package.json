@@ -22,9 +22,7 @@
     "@types/three": "^0.160.0",
     "react": "^18.2.0",
     "three": "^0.160.0",
+    "three-stdlib": "^2.28.9",
     "typescript": "^5.3.3"
-  },
-  "dependencies": {
-    "three-stdlib": "^2.28.9"
   }
 }
