@@ -1,3 +1,4 @@
+import { Perf } from "r3f-perf";
 import { useEffect, useRef } from "react";
 import { Marker, ThreeGlobe, type ThreeGlobeRef } from "react-three-globe";
 
@@ -5,6 +6,7 @@ import { Marker, ThreeGlobe, type ThreeGlobeRef } from "react-three-globe";
  * TODO:
  * - Arcs between locations
  * - Support different projections
+ * - Graticules (every 10 degrees)
  * - Highlight countries
  */
 
@@ -35,7 +37,9 @@ export default function Globe() {
 			<ThreeGlobe
 				globeRef={globe}
 				globeTexture="https://unpkg.com/three-globe/example/img/earth-day.jpg"
+				polarOffset={0.2}
 			>
+				<Perf />
 				{MARKER.map(({ label, coords }) => (
 					<CityMarker
 						key={label}
@@ -73,27 +77,3 @@ function CityMarker({
 		</Marker>
 	);
 }
-
-// export default function Globe() {
-// 	const globe = useRef();
-
-// 	const foo = () => {
-// 		globe.current?.pointOfView({ lat: 51.5074, lng: 0.1278 }, 5000);
-// 	}
-
-// 	return (
-// 		<div style={{ width: "100vw", height: "100vh", background: "#eee" }}>
-// 			<ThreeGlobe ref={globe} projection={true ? "3d" : "equidist"}>
-// 				{/* Highlight location */}
-// 				<Marker lat={51.5074} lng={0.1278} />
-// 				<Marker coords={[51.5074, 0.1278]} />
-// 				{/* Connection between locations */}
-// 				<Arc from={[51.5074, 0.1278]} to={[40.7128, -74.006]} width={2}>
-// 					<Label position="middle">Hi there</Label>
-// 				</Arc>
-// 				{/* Location dot */}
-// 				<Dot lat={40.7128} lng={-74.006} />
-// 			</ThreeGlobe>
-// 		</div>
-// 	);
-// }

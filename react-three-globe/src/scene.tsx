@@ -16,12 +16,18 @@ export interface ThreeGlobeRef {
 
 export type ThreeGlobeProps = {
 	globeRef?: React.Ref<ThreeGlobeRef>;
+
+	/** Offset of the polar angle in radians used by `globeRef.pointOfView` */
+	polarOffset?: number;
+	/** Offset of the azimuth angle in radians used by `globeRef.pointOfView` */
+	azimuthOffset?: number;
+
 	children?: React.ReactNode;
 } & Prefix<GlobeProps, "globe">;
 
 export function ThreeGlobe(props: ThreeGlobeProps) {
 	return (
-		<Canvas>
+		<Canvas frameloop="demand">
 			<Suspense fallback={null}>
 				<ambientLight color={0xcccccc} intensity={Math.PI} />
 				<directionalLight color={0xffffff} intensity={0.6 * Math.PI} />
@@ -32,15 +38,23 @@ export function ThreeGlobe(props: ThreeGlobeProps) {
 	);
 }
 
-function _ThreeGlobe({ globeRef, children, ...globe }: ThreeGlobeProps) {
+function _ThreeGlobe({
+	globeRef,
+	polarOffset,
+	azimuthOffset,
+	children,
+	...globe
+}: ThreeGlobeProps) {
 	const ctrl = useRef<OrbitControlsRef>(null);
 
 	useImperativeHandle(globeRef, () => ({
 		pointOfView: (coords) => {
-			// TODO: Verify implementation
-			console.log("-> pointOfView", coords);
-			ctrl.current?.setPolarAngle(deg2Rad(coords.lat));
-			ctrl.current?.setAzimuthalAngle(deg2Rad(coords.lng));
+			ctrl.current?.setPolarAngle(
+				Math.PI / 2 - deg2Rad(coords.lat) + (polarOffset ?? 0),
+			);
+			ctrl.current?.setAzimuthalAngle(
+				deg2Rad(coords.lng) + (azimuthOffset ?? 0),
+			);
 		},
 	}));
 
@@ -58,6 +72,7 @@ function _ThreeGlobe({ globeRef, children, ...globe }: ThreeGlobeProps) {
 				}}
 				minDistance={110}
 				maxDistance={800}
+				enablePan={false}
 			/>
 			<Globe texture={globe.globeTexture} />
 			{children}
