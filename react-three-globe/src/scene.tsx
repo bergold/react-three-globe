@@ -25,7 +25,7 @@ export type ThreeGlobeProps = {
 	children?: React.ReactNode;
 } & Prefix<GlobeProps, "globe">;
 
-export function ThreeGlobe(props: ThreeGlobeProps) {
+export function ThreeGlobe({ children, ...props }: ThreeGlobeProps) {
 	return (
 		<Canvas frameloop="demand">
 			<Suspense fallback={null}>
@@ -33,6 +33,7 @@ export function ThreeGlobe(props: ThreeGlobeProps) {
 				<directionalLight color={0xffffff} intensity={0.6 * Math.PI} />
 				<PerspectiveCamera makeDefault position={[0, 0, GLOBE_RADIUS * 2.5]} />
 				<_ThreeGlobe {...props} />
+				{children}
 			</Suspense>
 		</Canvas>
 	);
@@ -42,7 +43,6 @@ function _ThreeGlobe({
 	globeRef,
 	polarOffset,
 	azimuthOffset,
-	children,
 	...globe
 }: ThreeGlobeProps) {
 	const ctrl = useRef<OrbitControlsRef>(null);
@@ -79,7 +79,6 @@ function _ThreeGlobe({
 				enablePan={false}
 			/>
 			<Globe texture={globe.globeTexture} />
-			{children}
 		</>
 	);
 }
