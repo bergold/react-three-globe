@@ -59,6 +59,7 @@ export default function GlobeExample({
 						onClick={() => globe.current?.pointOfView(coords)}
 					/>
 				))}
+				<Globe.Arc from={MARKER[2].coords} to={MARKER[3].coords} />
 			</Globe.Root>
 		</div>
 	);
