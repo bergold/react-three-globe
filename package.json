@@ -6,8 +6,16 @@
     "react-three-globe",
     "example"
   ],
-  "packageManager": "bun@1.0.20",
-  "dependencies": {
+  "scripts": {
+    "dev": "cd example && bun dev",
+    "check": "biome check .",
+    "lint": "biome lint .",
+    "format": "biome format . --write",
+    "sherif": "bunx sherif@latest",
+    "knip": "bunx knip@latest"
+  },
+  "packageManager": "bun@1.0.21",
+  "devDependencies": {
     "@biomejs/biome": "1.4.1"
   }
 }
