@@ -7,14 +7,14 @@
     "example"
   ],
   "scripts": {
-    "dev": "cd example && bun dev",
+    "dev": "cd example && npm run dev",
     "check": "biome check .",
     "lint": "biome lint .",
     "format": "biome format . --write",
-    "sherif": "bunx sherif@latest",
-    "knip": "bunx knip@latest"
+    "sherif": "npx sherif@latest",
+    "knip": "npx knip@latest"
   },
-  "packageManager": "bun@1.0.21",
+  "packageManager": "npm@10.2.5",
   "devDependencies": {
     "@biomejs/biome": "1.4.1"
   }
