@@ -1,19 +1,34 @@
 import { useTexture } from "@react-three/drei";
 import { GLOBE_RADIUS } from "../const";
+import { useGlobeContext } from "../scene";
 
 export interface GlobeProps {
 	texture: string;
 }
 
 export function Globe({ texture }: GlobeProps) {
+	const { projection } = useGlobeContext("Globe");
 	const globeImage = useTexture(texture, (t) => {
 		t.colorSpace = "srgb";
 	});
 
-	return (
-		<mesh rotation={[0, -Math.PI / 2 /* -90° */, 0]}>
-			<sphereGeometry args={[GLOBE_RADIUS, 75, 75]} />
-			<meshPhongMaterial map={globeImage} />
-		</mesh>
-	);
+	if (projection === "equirectangular") {
+		return (
+			<mesh>
+				<planeGeometry
+					args={[GLOBE_RADIUS * 2 * Math.PI, GLOBE_RADIUS * Math.PI]}
+				/>
+				<meshLambertMaterial map={globeImage} />
+			</mesh>
+		);
+	}
+	if (projection === "3d") {
+		return (
+			<mesh rotation={[0, -Math.PI / 2 /* -90° */, 0]}>
+				<sphereGeometry args={[GLOBE_RADIUS, 75, 75]} />
+				<meshLambertMaterial map={globeImage} />
+			</mesh>
+		);
+	}
+	return null;
 }

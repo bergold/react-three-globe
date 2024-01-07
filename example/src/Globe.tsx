@@ -1,10 +1,11 @@
 import { Perf } from "r3f-perf";
 import { useEffect, useRef } from "react";
-import { Marker, ThreeGlobe, type ThreeGlobeRef } from "react-three-globe";
+import * as Globe from "react-three-globe";
 
 /**
  * TODO:
  * - Arcs between locations
+ * - Sticky markers
  * - Support different projections
  * - Graticules (every 10 degrees)
  * - Highlight countries
@@ -20,8 +21,10 @@ const MARKER = [
 	{ label: "Sydney", coords: { lat: -33.8688, lng: 151.2093 } },
 ];
 
-export default function Globe() {
-	const globe = useRef<ThreeGlobeRef>(null);
+export default function GlobeExample({
+	projection,
+}: { projection: "3d" | "equirectangular" }) {
+	const globe = useRef<Globe.RootRef>(null);
 
 	useEffect(() => {
 		const t = window.setTimeout(() => {
@@ -34,6 +37,7 @@ export default function Globe() {
 
 	return (
 		<div
+			className={`globe-container projection-${projection}`}
 			style={{
 				// create a new stacking context
 				position: "relative",
@@ -44,12 +48,9 @@ export default function Globe() {
 				background: "#eee",
 			}}
 		>
-			<ThreeGlobe
-				globeRef={globe}
-				globeTexture="/texture.png"
-				polarOffset={0.2}
-			>
+			<Globe.Root globeRef={globe} projection={projection} polarOffset={0.2}>
 				<Perf />
+				<Globe.Globe texture="/texture.png" />
 				{MARKER.map(({ label, coords }) => (
 					<CityMarker
 						key={label}
@@ -58,7 +59,7 @@ export default function Globe() {
 						onClick={() => globe.current?.pointOfView(coords)}
 					/>
 				))}
-			</ThreeGlobe>
+			</Globe.Root>
 		</div>
 	);
 }
@@ -69,7 +70,7 @@ function CityMarker({
 	onClick,
 }: (typeof MARKER)[number] & { onClick: () => void }) {
 	return (
-		<Marker coordinate={coords}>
+		<Globe.Marker coordinate={coords}>
 			<div className="city-marker">
 				<button type="button" onClick={onClick}>
 					{label}
@@ -84,6 +85,6 @@ function CityMarker({
 					<polygon points="0,0 30,0 15,10" />
 				</svg>
 			</div>
-		</Marker>
+		</Globe.Marker>
 	);
 }

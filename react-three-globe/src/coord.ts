@@ -1,13 +1,26 @@
 import { useMemo } from "react";
 import { Vector3 } from "three";
 import { GLOBE_RADIUS } from "./const";
+import { useGlobeContext } from "./scene";
 
 export type Coordinate = { lat: number; lng: number };
 
-export function useVec3({ lat, lng }: Coordinate, relAltitude?: number) {
+export function useVec3(
+	debugName: string,
+	{ lat, lng }: Coordinate,
+	relAltitude?: number,
+) {
+	const { projection } = useGlobeContext(debugName);
 	return useMemo(
-		() => new Vector3(...polar2Cartesian({ lat, lng }, relAltitude)),
-		[lat, lng, relAltitude],
+		() =>
+			projection === "3d"
+				? new Vector3(...polar2Cartesian({ lat, lng }, relAltitude))
+				: new Vector3(
+						deg2Rad(lng) * GLOBE_RADIUS,
+						deg2Rad(lat) * GLOBE_RADIUS,
+						relAltitude ?? 0,
+				  ),
+		[projection, lat, lng, relAltitude],
 	);
 }
 

@@ -14,7 +14,7 @@ export interface MarkerProps {
 export function Marker({ coordinate, children, ...div }: MarkerProps) {
 	const htmlRef = useRef<HTMLDivElement>(null);
 
-	const vec = useVec3(coordinate);
+	const vec = useVec3("Marker", coordinate);
 
 	useFrame(({ camera }) => {
 		if (htmlRef.current) {
