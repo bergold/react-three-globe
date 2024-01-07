@@ -55,7 +55,6 @@ export function ThreeGlobe({
 	polarOffset,
 	azimuthOffset,
 	children,
-	...globe
 }: ThreeGlobeProps) {
 	const ctrl = useRef<OrbitControlsRef | MapControlsRef>(null);
 

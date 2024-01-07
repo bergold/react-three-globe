@@ -7,7 +7,7 @@ export default function App() {
 	const [projection, setProjection] = React.useState<"3d" | "equirectangular">(
 		"3d",
 	);
-	const [pending, startTransition] = useTransition();
+	const [, startTransition] = useTransition();
 
 	return (
 		<>
