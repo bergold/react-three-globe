@@ -5,18 +5,14 @@ import {
 	PerspectiveCamera,
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import {
-	Suspense,
-	createContext,
-	useContext,
-	useImperativeHandle,
-	useRef,
-} from "react";
+import { Suspense, useImperativeHandle, useRef } from "react";
 import type {
 	MapControls as MapControlsRef,
 	OrbitControls as OrbitControlsRef,
 } from "three-stdlib";
+
 import { GLOBE_RADIUS } from "./const";
+import { GlobeContextProvider } from "./context";
 import { Coordinate, deg2Rad } from "./coord";
 
 export interface ThreeGlobeRef {
@@ -35,19 +31,6 @@ export type ThreeGlobeProps = {
 
 	children?: React.ReactNode;
 };
-
-type GlobeContextState = {
-	projection: ThreeGlobeProps["projection"];
-};
-const GlobeContext = createContext<GlobeContextState | null>(null);
-export function useGlobeContext(debugName: string) {
-	const ctx = useContext(GlobeContext);
-	if (!ctx)
-		throw new Error(
-			`<${debugName}> must be used within the <ThreeGlobe> component`,
-		);
-	return ctx;
-}
 
 export function ThreeGlobe({
 	globeRef,
@@ -131,9 +114,9 @@ export function ThreeGlobe({
 					/>
 				) : null}
 
-				<GlobeContext.Provider value={{ projection }}>
+				<GlobeContextProvider value={{ projection }}>
 					{children}
-				</GlobeContext.Provider>
+				</GlobeContextProvider>
 			</Suspense>
 		</Canvas>
 	);

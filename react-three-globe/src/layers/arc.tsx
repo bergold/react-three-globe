@@ -1,7 +1,8 @@
 import { Line } from "@react-three/drei";
 import { useMemo } from "react";
 import { Curve, Vector3 } from "three";
-import { Coordinate, useVec3 } from "../coord";
+
+import { Coordinate, useVec3 } from "../core/coord";
 
 const SEGMENTS = 64;
 

@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { Vector3 } from "three";
+
 import { GLOBE_RADIUS } from "./const";
-import { useGlobeContext } from "./scene";
+import { useGlobeContext } from "./context";
 
 export type Coordinate = { lat: number; lng: number };
 

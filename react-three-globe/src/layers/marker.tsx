@@ -1,8 +1,9 @@
 import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
-import { GLOBE_RADIUS } from "../const";
-import { Coordinate, useVec3 } from "../coord";
+
+import { GLOBE_RADIUS } from "../core/const";
+import { Coordinate, useVec3 } from "../core/coord";
 
 export interface MarkerProps {
 	coordinate: Coordinate;

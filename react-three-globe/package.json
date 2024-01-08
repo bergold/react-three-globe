@@ -7,7 +7,19 @@
   },
   "type": "module",
   "exports": {
-    ".": "./src/react-three-globe.ts"
+    ".": {
+      "import": {
+        "types": "./dist/es/react-three-globe.d.mts",
+        "default": "./dist/es/react-three-globe.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/react-three-globe.d.cts",
+        "default": "./dist/cjs/react-three-globe.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "bunchee"
   },
   "peerDependencies": {
     "@react-three/drei": "*",
@@ -20,9 +32,13 @@
     "@react-three/fiber": "^8.15.13",
     "@types/react": "^18.2.46",
     "@types/three": "^0.160.0",
+    "bunchee": "^4.3.0",
     "react": "^18.2.0",
     "three": "^0.160.0",
     "three-stdlib": "^2.28.11",
     "typescript": "^5.3.3"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }

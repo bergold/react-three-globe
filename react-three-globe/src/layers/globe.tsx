@@ -1,6 +1,7 @@
 import { useTexture } from "@react-three/drei";
-import { GLOBE_RADIUS } from "../const";
-import { useGlobeContext } from "../scene";
+
+import { GLOBE_RADIUS } from "../core/const";
+import { useGlobeContext } from "../core/context";
 
 export interface GlobeProps {
 	texture: string;

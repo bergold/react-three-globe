@@ -1,8 +1,8 @@
-import { Coordinate } from "./coord";
+import { Coordinate } from "./core/coord";
+import { ThreeGlobe, ThreeGlobeProps, ThreeGlobeRef } from "./core/scene";
 import { Arc, ArcProps } from "./layers/arc";
 import { Globe, GlobeProps } from "./layers/globe";
 import { Marker, MarkerProps } from "./layers/marker";
-import { ThreeGlobe, ThreeGlobeProps, ThreeGlobeRef } from "./scene";
 
 const Root = ThreeGlobe;
 type RootProps = ThreeGlobeProps;
