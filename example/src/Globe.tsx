@@ -59,7 +59,11 @@ export default function GlobeExample({
 						onClick={() => globe.current?.pointOfView(coords)}
 					/>
 				))}
-				<Globe.Arc from={MARKER[2].coords} to={MARKER[3].coords} />
+				<Globe.Arc
+					from={MARKER[2].coords}
+					to={MARKER[3].coords}
+					color="#ed758f"
+				/>
 			</Globe.Root>
 		</div>
 	);

@@ -1,28 +1,32 @@
+import { Line } from "@react-three/drei";
 import { useMemo } from "react";
 import { Curve, Vector3 } from "three";
 import { Coordinate, useVec3 } from "../coord";
 
 const SEGMENTS = 64;
-const RADIUS = 2;
-const RADIAL_SEGMENTS = 12;
 
 export interface ArcProps {
 	from: Coordinate;
 	to: Coordinate;
 	color?: string;
+	lineWidth?: number;
 	children?: React.ReactNode;
 }
 
 export function Arc(props: ArcProps) {
-	const from = useVec3("Arc", props.from);
-	const to = useVec3("Arc", props.to);
-	const curve = useMemo(() => new SphereArc(from, to), [from, to]);
+	const from = useVec3("Arc", props.from, 0.01);
+	const to = useVec3("Arc", props.to, 0.01);
+	const curve = useMemo(
+		() => new SphereArc(from, to).getPoints(SEGMENTS),
+		[from, to],
+	);
 
 	return (
-		<mesh>
-			<tubeGeometry args={[curve, SEGMENTS, RADIUS, RADIAL_SEGMENTS]} />
-			<meshPhongMaterial color={props.color ?? "#ed758f"} />
-		</mesh>
+		<Line
+			points={curve}
+			color={props.color ?? "#ffffff"}
+			lineWidth={props.lineWidth ?? 10}
+		/>
 	);
 }
 
