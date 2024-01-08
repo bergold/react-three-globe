@@ -1,7 +1,7 @@
 {
   "name": "react-three-globe",
   "description": "A React component to create beautiful 3D globes and data visualizations in React using Three.js",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "publishConfig": {
     "access": "public"
   },

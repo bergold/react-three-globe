@@ -2,7 +2,7 @@
 	"extends": "../tsconfig.json",
 	"compilerOptions": {
 		"types": ["@react-three/fiber"],
-		"jsx": "preserve",
+		"jsx": "react-jsx",
 		"lib": ["dom", "dom.iterable", "esnext"]
 	},
 	"include": ["**/src"]
