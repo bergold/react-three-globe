@@ -4,8 +4,8 @@ import {
 	OrthographicCamera,
 	PerspectiveCamera,
 } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { Suspense, useImperativeHandle, useRef } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
+import { Suspense, useImperativeHandle, useLayoutEffect, useRef } from "react";
 import type {
 	MapControls as MapControlsRef,
 	OrbitControls as OrbitControlsRef,
@@ -15,12 +15,17 @@ import { GLOBE_RADIUS } from "./const";
 import { GlobeContextProvider } from "./context";
 import { Coordinate, deg2Rad } from "./coord";
 
-export interface ThreeGlobeRef {
+export interface RootRef {
 	pointOfView: (coords: Coordinate) => void;
 }
 
-export type ThreeGlobeProps = {
-	globeRef?: React.Ref<ThreeGlobeRef>;
+export type RootProps = {
+	globeRef?: React.Ref<RootRef>;
+
+	/** X coordinate of the center point relative to the canvas size. 0 = left, 0.5 = center, 1 = right */
+	originX?: number;
+	/** Y coordinate of the center point relative to the canvas size. 0 = top, 0.5 = center, 1 = bottom */
+	originY?: number;
 
 	projection?: "3d" | "equirectangular";
 
@@ -32,13 +37,16 @@ export type ThreeGlobeProps = {
 	children?: React.ReactNode;
 };
 
-export function ThreeGlobe({
+function Scene({
 	globeRef,
+	originX: offsetX,
+	originY: offsetY,
 	projection = "3d",
 	polarOffset,
 	azimuthOffset,
 	children,
-}: ThreeGlobeProps) {
+}: RootProps) {
+	const getThree = useThree((state) => state.get);
 	const ctrl = useRef<OrbitControlsRef | MapControlsRef>(null);
 
 	useImperativeHandle(
@@ -61,62 +69,76 @@ export function ThreeGlobe({
 		[projection, polarOffset, azimuthOffset],
 	);
 
+	useLayoutEffect(() => {
+		const { camera, size } = getThree();
+		camera.setViewOffset(
+			size.width * 2,
+			size.height * 2,
+			(1 - (offsetX ?? 0.5)) * size.width,
+			(1 - (offsetY ?? 0.5)) * size.height,
+			size.width,
+			size.height,
+		);
+	}, [getThree, offsetX, offsetY]);
+
+	return (
+		<>
+			{/* LIGHTS */}
+			<ambientLight color={0xcccccc} intensity={Math.PI} />
+			<directionalLight color={0xffffff} intensity={0.6 * Math.PI} />
+			{/* CAMERA */}
+			{projection === "3d" ? (
+				<PerspectiveCamera makeDefault position={[0, 0, GLOBE_RADIUS * 5]} />
+			) : projection === "equirectangular" ? (
+				<OrthographicCamera makeDefault position={[0, 0, GLOBE_RADIUS * 5]} />
+			) : null}
+			{/* CONTROLS */}
+			{projection === "3d" ? (
+				<OrbitControls
+					ref={ctrl}
+					makeDefault
+					onStart={() => {
+						// Note: This prevents the user from selecting text, when dragging the globe
+						document.body.style.userSelect = "none";
+					}}
+					onEnd={() => {
+						document.body.style.userSelect = "";
+					}}
+					minDistance={110}
+					maxDistance={800}
+					enablePan={false}
+				/>
+			) : projection === "equirectangular" ? (
+				<MapControls
+					ref={ctrl}
+					makeDefault
+					onStart={() => {
+						// Note: This prevents the user from selecting text, when dragging the globe
+						document.body.style.userSelect = "none";
+					}}
+					onEnd={() => {
+						document.body.style.userSelect = "";
+					}}
+					screenSpacePanning={true}
+					minPolarAngle={Math.PI / 2}
+					maxPolarAngle={Math.PI / 2}
+					minAzimuthAngle={0}
+					maxAzimuthAngle={0}
+				/>
+			) : null}
+
+			<GlobeContextProvider value={{ projection }}>
+				{children}
+			</GlobeContextProvider>
+		</>
+	);
+}
+
+export function Root(props: RootProps) {
 	return (
 		<Canvas frameloop="demand">
 			<Suspense fallback={null}>
-				{/* LIGHTS */}
-				<ambientLight color={0xcccccc} intensity={Math.PI} />
-				<directionalLight color={0xffffff} intensity={0.6 * Math.PI} />
-				{/* CAMERA */}
-				{projection === "3d" ? (
-					<PerspectiveCamera
-						makeDefault
-						position={[0, 0, GLOBE_RADIUS * 2.5]}
-					/>
-				) : projection === "equirectangular" ? (
-					<OrthographicCamera
-						makeDefault
-						position={[0, 0, GLOBE_RADIUS * 2.5]}
-					/>
-				) : null}
-				{/* CONTROLS */}
-				{projection === "3d" ? (
-					<OrbitControls
-						ref={ctrl}
-						makeDefault
-						onStart={() => {
-							// Note: This prevents the user from selecting text, when dragging the globe
-							document.body.style.userSelect = "none";
-						}}
-						onEnd={() => {
-							document.body.style.userSelect = "";
-						}}
-						minDistance={110}
-						maxDistance={800}
-						enablePan={false}
-					/>
-				) : projection === "equirectangular" ? (
-					<MapControls
-						ref={ctrl}
-						makeDefault
-						onStart={() => {
-							// Note: This prevents the user from selecting text, when dragging the globe
-							document.body.style.userSelect = "none";
-						}}
-						onEnd={() => {
-							document.body.style.userSelect = "";
-						}}
-						screenSpacePanning={true}
-						minPolarAngle={Math.PI / 2}
-						maxPolarAngle={Math.PI / 2}
-						minAzimuthAngle={0}
-						maxAzimuthAngle={0}
-					/>
-				) : null}
-
-				<GlobeContextProvider value={{ projection }}>
-					{children}
-				</GlobeContextProvider>
+				<Scene {...props} />
 			</Suspense>
 		</Canvas>
 	);
