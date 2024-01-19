@@ -1,4 +1,4 @@
-import { Coordinate } from "./core/coord";
+import { Coordinates } from "./core/coord";
 import { Root, RootProps, RootRef } from "./core/scene";
 import { Arc, ArcProps } from "./layers/arc";
 import { Globe, GlobeProps } from "./layers/globe";
@@ -14,7 +14,7 @@ export {
 
 export type {
 	ArcProps,
-	Coordinate,
+	Coordinates,
 	GlobeProps,
 	MarkerProps,
 	RootProps,

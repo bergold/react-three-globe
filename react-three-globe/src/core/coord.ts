@@ -4,11 +4,11 @@ import { Vector3 } from "three";
 import { GLOBE_RADIUS } from "./const";
 import { useGlobeContext } from "./context";
 
-export type Coordinate = { lat: number; lng: number };
+export type Coordinates = { lat: number; lng: number };
 
 export function useVec3(
 	debugName: string,
-	{ lat, lng }: Coordinate,
+	{ lat, lng }: Coordinates,
 	relAltitude?: number,
 ) {
 	const { projection } = useGlobeContext(debugName);
@@ -26,7 +26,7 @@ export function useVec3(
 }
 
 export function polar2Cartesian(
-	{ lat, lng }: Coordinate,
+	{ lat, lng }: Coordinates,
 	relAltitude?: number,
 ) {
 	const phi = ((90 - lat) * Math.PI) / 180;

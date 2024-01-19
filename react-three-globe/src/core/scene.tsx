@@ -13,18 +13,19 @@ import type {
 
 import { GLOBE_RADIUS } from "./const";
 import { GlobeContextProvider } from "./context";
-import { Coordinate, deg2Rad } from "./coord";
+import { Coordinates, deg2Rad } from "./coord";
+import { TunnelContainer, TunnelOut } from "./tunnel";
 
 export interface RootRef {
-	pointOfView: (coords: Coordinate) => void;
+	pointOfView: (coords: Coordinates) => void;
 }
 
 export type RootProps = {
 	globeRef?: React.Ref<RootRef>;
 
-	/** X coordinate of the center point relative to the canvas size. 0 = left, 0.5 = center, 1 = right */
+	/** X coordinates of the center point relative to the canvas size. 0 = left, 0.5 = center, 1 = right */
 	originX?: number;
-	/** Y coordinate of the center point relative to the canvas size. 0 = top, 0.5 = center, 1 = bottom */
+	/** Y coordinates of the center point relative to the canvas size. 0 = top, 0.5 = center, 1 = bottom */
 	originY?: number;
 
 	projection?: "3d" | "equirectangular";
@@ -34,8 +35,9 @@ export type RootProps = {
 	/** Offset of the azimuth angle in radians used by `globeRef.pointOfView` */
 	azimuthOffset?: number;
 
+	divRef?: React.Ref<HTMLDivElement>;
 	children?: React.ReactNode;
-};
+} & React.ComponentPropsWithoutRef<"div">;
 
 function Scene({
 	globeRef,
@@ -135,11 +137,48 @@ function Scene({
 }
 
 export function Root(props: RootProps) {
+	const {
+		globeRef,
+		originX,
+		originY,
+		projection,
+		polarOffset,
+		azimuthOffset,
+
+		divRef,
+		children,
+		style,
+		...divProps
+	} = props;
+
 	return (
-		<Canvas frameloop="demand">
-			<Suspense fallback={null}>
-				<Scene {...props} />
-			</Suspense>
-		</Canvas>
+		<div
+			ref={divRef}
+			{...divProps}
+			style={{
+				// create a new stacking context
+				position: "relative",
+				zIndex: 0,
+				...style,
+			}}
+		>
+			<TunnelContainer>
+				<Canvas frameloop="demand">
+					<Suspense fallback={null}>
+						<Scene
+							globeRef={globeRef}
+							originX={originX}
+							originY={originY}
+							projection={projection}
+							polarOffset={polarOffset}
+							azimuthOffset={azimuthOffset}
+						>
+							{children}
+						</Scene>
+					</Suspense>
+				</Canvas>
+				<TunnelOut />
+			</TunnelContainer>
+		</div>
 	);
 }

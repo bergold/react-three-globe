@@ -2,13 +2,13 @@ import { Line } from "@react-three/drei";
 import { useMemo } from "react";
 import { Curve, Vector3 } from "three";
 
-import { Coordinate, useVec3 } from "../core/coord";
+import { Coordinates, useVec3 } from "../core/coord";
 
 const SEGMENTS = 64;
 
 export interface ArcProps {
-	from: Coordinate;
-	to: Coordinate;
+	from: Coordinates;
+	to: Coordinates;
 	color?: string;
 	lineWidth?: number;
 	children?: React.ReactNode;

@@ -6,9 +6,12 @@ import * as Globe from "react-three-globe";
  * TODO:
  * - Arcs between locations
  * - Sticky markers
- * - Support different projections
+ * - Request frame on first render (Marker)
+ * - Occlude markers behind globe
+ * - Support different projections (web mercator)
  * - Graticules (every 10 degrees)
  * - Highlight countries
+ * - OriginX/Y not reactive to projection change
  */
 
 const MARKER = [
@@ -36,36 +39,33 @@ export default function GlobeExample({
 	}, []);
 
 	return (
-		<div
+		<Globe.Root
+			globeRef={globe}
+			projection={projection}
+			polarOffset={0.2}
 			className={`globe-container projection-${projection}`}
 			style={{
-				// create a new stacking context
-				position: "relative",
-				zIndex: 0,
-
 				width: "100vw",
 				height: "100vh",
 				background: "#eee",
 			}}
 		>
-			<Globe.Root globeRef={globe} projection={projection} polarOffset={0.2}>
-				<Perf />
-				<Globe.Globe texture="/texture.png" />
-				{MARKER.map(({ label, coords }) => (
-					<CityMarker
-						key={label}
-						label={label}
-						coords={coords}
-						onClick={() => globe.current?.pointOfView(coords)}
-					/>
-				))}
-				<Globe.Arc
-					from={MARKER[2].coords}
-					to={MARKER[3].coords}
-					color="#ed758f"
+			<Perf />
+			<Globe.Globe texture="/texture.png" />
+			{MARKER.map(({ label, coords }) => (
+				<CityMarker
+					key={label}
+					label={label}
+					coords={coords}
+					onClick={() => globe.current?.pointOfView(coords)}
 				/>
-			</Globe.Root>
-		</div>
+			))}
+			<Globe.Arc
+				from={MARKER[2].coords}
+				to={MARKER[3].coords}
+				color="#ed758f"
+			/>
+		</Globe.Root>
 	);
 }
 
@@ -75,7 +75,7 @@ function CityMarker({
 	onClick,
 }: (typeof MARKER)[number] & { onClick: () => void }) {
 	return (
-		<Globe.Marker coordinate={coords}>
+		<Globe.Marker coordinates={coords} className="city-marker-anchor">
 			<div className="city-marker">
 				<button type="button" onClick={onClick}>
 					{label}
